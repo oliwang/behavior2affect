@@ -48,7 +48,8 @@ export class LeetCodeTreeDataProvider implements vscode.TreeDataProvider<LeetCod
         }
 
         return {
-            label: element.isProblem ? `[${element.id}] ${element.name}` + this.parsePremiumUnLockIconPath(element) : element.name,
+            // label: element.isProblem ? `[${element.id}] ${element.name}` + this.parsePremiumUnLockIconPath(element) : element.name,
+            label: element.isProblem ? `${element.name}` : element.name,
             tooltip: this.getSubCategoryTooltip(element),
             collapsibleState: element.isProblem ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed,
             iconPath: this.parseIconPathFromProblemState(element),
@@ -85,6 +86,8 @@ export class LeetCodeTreeDataProvider implements vscode.TreeDataProvider<LeetCod
                     return explorerNodeManager.getAllTagNodes();
                 case Category.Company:
                     return explorerNodeManager.getAllCompanyNodes();
+                case Category.QuestionSet:
+                    return explorerNodeManager.getQuestionSetNodes();
                 default:
                     if (element.isProblem) {
                         return [];
@@ -99,6 +102,7 @@ export class LeetCodeTreeDataProvider implements vscode.TreeDataProvider<LeetCod
             return "";
         }
         const { isPremium } = globalState.getUserStatus() ?? {};
+        return "";
         switch (element.state) {
             case ProblemState.AC:
                 return this.context.asAbsolutePath(path.join("resources", "check.png"));

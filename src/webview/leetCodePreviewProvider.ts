@@ -100,12 +100,12 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
             </head>
             <body>
                 ${head}
-                ${info}
-                ${tags}
-                ${companies}
+                <!-- ${info} -->
+                <!-- ${tags} -->
+                <!-- ${companies} -->
                 ${body}
                 <hr />
-                ${links}
+                <!-- ${links} -->
                 ${!this.sideMode ? button.element : ""}
                 <script>
                     const vscode = acquireVsCodeApi();

@@ -33,25 +33,29 @@ class ExplorerNodeManager implements Disposable {
 
     public getRootNodes(): LeetCodeNode[] {
         return [
+            // new LeetCodeNode(Object.assign({}, defaultProblem, {
+            //     id: Category.All,
+            //     name: Category.All,
+            // }), false),
+            // new LeetCodeNode(Object.assign({}, defaultProblem, {
+            //     id: Category.Difficulty,
+            //     name: Category.Difficulty,
+            // }), false),
+            // new LeetCodeNode(Object.assign({}, defaultProblem, {
+            //     id: Category.Tag,
+            //     name: Category.Tag,
+            // }), false),
+            // new LeetCodeNode(Object.assign({}, defaultProblem, {
+            //     id: Category.Company,
+            //     name: Category.Company,
+            // }), false),
+            // new LeetCodeNode(Object.assign({}, defaultProblem, {
+            //     id: Category.Favorite,
+            //     name: Category.Favorite,
+            // }), false),
             new LeetCodeNode(Object.assign({}, defaultProblem, {
-                id: Category.All,
-                name: Category.All,
-            }), false),
-            new LeetCodeNode(Object.assign({}, defaultProblem, {
-                id: Category.Difficulty,
-                name: Category.Difficulty,
-            }), false),
-            new LeetCodeNode(Object.assign({}, defaultProblem, {
-                id: Category.Tag,
-                name: Category.Tag,
-            }), false),
-            new LeetCodeNode(Object.assign({}, defaultProblem, {
-                id: Category.Company,
-                name: Category.Company,
-            }), false),
-            new LeetCodeNode(Object.assign({}, defaultProblem, {
-                id: Category.Favorite,
-                name: Category.Favorite,
+                id: Category.QuestionSet,
+                name: Category.QuestionSet,
             }), false),
         ];
     }
@@ -141,12 +145,29 @@ class ExplorerNodeManager implements Disposable {
                         res.push(node);
                     }
                     break;
+                case Category.QuestionSet:
+                    console.log(metaInfo);
+                    break;
                 default:
                     break;
             }
         }
         return this.applySortingStrategy(res);
     }
+
+    public getQuestionSetNodes(): LeetCodeNode[] {
+        const res: LeetCodeNode[] = [];
+        const specificIds = ["2413", "1800", "54", "885"];
+        for (const node of this.explorerNodeMap.values()) {
+            if (specificIds.includes(node.id)) {
+                res.push(node);
+            }
+        }
+        // reverse the order of the nodes
+        res.reverse();
+        return res;
+    }
+
 
     public dispose(): void {
         this.explorerNodeMap.clear();
