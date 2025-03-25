@@ -5,7 +5,7 @@ import { ViewColumn } from "vscode";
 import { openKeybindingsEditor, promptHintMessage } from "../utils/uiUtils";
 import { ILeetCodeWebviewOption, LeetCodeWebview } from "./LeetCodeWebview";
 import { markdownEngine } from "./markdownEngine";
-
+import { globalState } from "../globalState";
 class LeetCodeSubmissionProvider extends LeetCodeWebview {
 
     protected readonly viewType: string = "leetcode.submission";
@@ -27,6 +27,22 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview {
     protected getWebviewContent(): string {
         const styles: string = markdownEngine.getStyles();
         const title: string = `## ${this.result.messages[0]}`;
+        // check is this.result.messages[0] is accepted, ignore case
+        if (this.result.messages[0].toLowerCase().includes("accepted")) {
+            let problemSetStatus = globalState.getProblemSetStatus();
+            if (problemSetStatus) {
+                for (let i = 0; i < problemSetStatus.length; i++) {
+                    if (problemSetStatus[i].status === "hide") {
+                        problemSetStatus[i].status = "show";
+                        break;
+                    }
+                }
+                globalState.setProblemSetStatus(problemSetStatus);
+            }
+        }
+
+
+
         const messages: string[] = this.result.messages.slice(1).map((m: string) => `* ${m}`);
         const sections: string[] = Object.keys(this.result)
             .filter((key: string) => key !== "messages")

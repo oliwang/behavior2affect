@@ -40,6 +40,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
         leetCodeTreeDataProvider.initialize(context);
         globalState.initialize(context);
+        // problems "2413", "1800", "54", "885"
+        // status: hide, show
+        globalState.setProblemSetStatus([
+            {problemId: "2413", status: "show"},
+            {problemId: "1800", status: "hide"},
+            {problemId: "54", status: "hide"},
+            {problemId: "885", status: "hide"}
+        ]);
 
         context.subscriptions.push(
             leetCodeStatusBarController,
