@@ -8,6 +8,8 @@ import { getSortingStrategy } from "../commands/plugin";
 import { Category, defaultProblem, ProblemState, SortingStrategy } from "../shared";
 import { shouldHideSolvedProblem } from "../utils/settingUtils";
 import { LeetCodeNode } from "./LeetCodeNode";
+import { globalState } from "../globalState";
+
 
 class ExplorerNodeManager implements Disposable {
     private explorerNodeMap: Map<string, LeetCodeNode> = new Map<string, LeetCodeNode>();
@@ -146,7 +148,6 @@ class ExplorerNodeManager implements Disposable {
                     }
                     break;
                 case Category.QuestionSet:
-                    console.log(metaInfo);
                     break;
                 default:
                     break;
@@ -157,7 +158,10 @@ class ExplorerNodeManager implements Disposable {
 
     public getQuestionSetNodes(): LeetCodeNode[] {
         const res: LeetCodeNode[] = [];
-        const specificIds = ["2413", "1800", "54", "885"];
+        const problemSetStatus = globalState.getProblemSetStatus();
+        // get a list of problem ids that are show status
+        const specificIds = problemSetStatus?.filter((status) => status.status === "show").map((status) => status.problemId) ?? [];
+        // const specificIds = ["2413", "1800", "54", "885"];
         for (const node of this.explorerNodeMap.values()) {
             if (specificIds.includes(node.id)) {
                 res.push(node);
