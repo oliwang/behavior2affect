@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 const CookieKey = "leetcode-cookie";
 const UserStatusKey = "leetcode-user-status";
 const ProblemSetStatusKey = "leetcode-problem-set-status";
-// const LogStatusKey = "leetcode-log-status";
+const LogStatusKey = "leetcode-log-status";
 
 export type UserDataType = {
     isSignedIn: boolean;
@@ -27,7 +27,7 @@ class GlobalState {
     private _cookie: string;
     private _userStatus: UserDataType;
     private _problemSetStatus: ProblemStatusDataType[];
-
+    private _logStatus: boolean;
     public initialize(context: vscode.ExtensionContext): void {
         this.context = context;
         this._state = this.context.globalState;
@@ -69,6 +69,14 @@ class GlobalState {
         return this._problemSetStatus ?? this._state.get(ProblemSetStatusKey);
     }
 
+    public setLogStatus(logStatus: boolean): any {
+        this._logStatus = logStatus;
+        return this._state.update(LogStatusKey, this._logStatus);
+    }
+
+    public getLogStatus(): boolean | undefined {
+        return this._logStatus ?? this._state.get(LogStatusKey);
+    }
 }
 
 export const globalState: GlobalState = new GlobalState();

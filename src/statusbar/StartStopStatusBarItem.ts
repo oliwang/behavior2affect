@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-
+import { globalState } from "../globalState";
 export class StartStopStatusBarItem implements vscode.Disposable {
     private readonly statusBarItem: vscode.StatusBarItem;
     private isRunning: boolean = false;
@@ -7,11 +7,13 @@ export class StartStopStatusBarItem implements vscode.Disposable {
     constructor() {
         this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
         this.statusBarItem.command = "behavior2affect.toggleStartStop";
+        this.isRunning = globalState.getLogStatus() ?? false;
         this.updateStatusBar();
     }
 
     public toggle(): void {
         this.isRunning = !this.isRunning;
+        globalState.setLogStatus(this.isRunning);
         this.updateStatusBar();
     } 
 
