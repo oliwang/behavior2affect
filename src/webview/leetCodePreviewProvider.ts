@@ -87,11 +87,6 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
             `</details>`,
         ].join("\n");
         const links: string = markdownEngine.render(`[Submissions](${this.getSubmissionsLink(url)}) | [Solution](${this.getSolutionsLink(url)})`);
-        const hint:string = markdownEngine.render(`
-            <details>
-                You can run code locally by using \`Solution().<method>(<args>)\`.
-            </details>
-        `);
         return `
             <!DOCTYPE html>
             <html>
@@ -111,8 +106,6 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
                 ${body}
                 <hr />
                 <!-- ${links} -->
-                ${hint}
-                <div>Test</div>
                 ${!this.sideMode ? button.element : ""}
 
                 <script>

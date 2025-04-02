@@ -26,6 +26,7 @@ import { leetCodeSubmissionProvider } from "./webview/leetCodeSubmissionProvider
 import { markdownEngine } from "./webview/markdownEngine";
 import TrackData from "./utils/trackingUtils";
 import { globalState } from "./globalState";
+import { StartStopStatusBarItem } from "./statusbar/StartStopStatusBarItem";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     try {
@@ -43,11 +44,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         // problems "2413", "1800", "54", "885"
         // status: hide, show
         globalState.setProblemSetStatus([
-            {problemId: "2413", status: "show"},
+            {problemId: "2235", status: "show"},
+            {problemId: "2413", status: "hide"},
             {problemId: "1800", status: "hide"},
             {problemId: "54", status: "hide"},
             {problemId: "885", status: "hide"}
         ]);
+
+        const startStopStatusBar = new StartStopStatusBarItem();
 
         context.subscriptions.push(
             leetCodeStatusBarController,
@@ -105,7 +109,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             vscode.commands.registerCommand("leetcode.switchDefaultLanguage", () => switchDefaultLanguage()),
             vscode.commands.registerCommand("leetcode.addFavorite", (node: LeetCodeNode) => star.addFavorite(node)),
             vscode.commands.registerCommand("leetcode.removeFavorite", (node: LeetCodeNode) => star.removeFavorite(node)),
-            vscode.commands.registerCommand("leetcode.problems.sort", () => plugin.switchSortingStrategy())
+            vscode.commands.registerCommand("leetcode.problems.sort", () => plugin.switchSortingStrategy()),
+            startStopStatusBar,
+            vscode.commands.registerCommand("behavior2affect.toggleStartStop", () => {
+                startStopStatusBar.toggle();
+            })
         );
 
         await leetCodeExecutor.switchEndpoint(plugin.getLeetCodeEndpoint());

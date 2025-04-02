@@ -1,5 +1,6 @@
 import { URLSearchParams } from "url";
-import { FileDecoration, FileDecorationProvider, ProviderResult, ThemeColor, Uri, workspace, WorkspaceConfiguration } from "vscode";
+import { FileDecoration, FileDecorationProvider, ProviderResult, ThemeColor, Uri } from "vscode";
+// import { FileDecoration, FileDecorationProvider, ProviderResult, ThemeColor, Uri, workspace, WorkspaceConfiguration } from "vscode";
 
 export class LeetCodeTreeItemDecorationProvider implements FileDecorationProvider {
     private readonly DIFFICULTY_BADGE_LABEL: { [key: string]: string } = {
@@ -32,10 +33,10 @@ export class LeetCodeTreeItemDecorationProvider implements FileDecorationProvide
         };
     }
 
-    private isDifficultyBadgeEnabled(): boolean {
-        const configuration: WorkspaceConfiguration = workspace.getConfiguration();
-        return configuration.get<boolean>("leetcode.colorizeProblems", false);
-    }
+    // private isDifficultyBadgeEnabled(): boolean {
+    //     const configuration: WorkspaceConfiguration = workspace.getConfiguration();
+    //     return configuration.get<boolean>("leetcode.colorizeProblems", false);
+    // }
 }
 
 export const leetCodeTreeItemDecorationProvider: LeetCodeTreeItemDecorationProvider = new LeetCodeTreeItemDecorationProvider();

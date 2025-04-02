@@ -110,7 +110,7 @@ class LeetCodeExecutor implements Disposable {
 
         if (!await fse.pathExists(filePath)) {
             await fse.createFile(filePath);
-            const codeTemplate: string = await this.executeCommandWithProgressEx("Fetching problem data...", this.nodeExecutable, cmd);
+            const codeTemplate: string = await this.executeCommandWithProgressEx("Fetching problem data...", this.nodeExecutable, cmd) + "\n" + "#You can run code locally by using `Solution().<method>(<args>)` below.\n";
             await fse.writeFile(filePath, codeTemplate);
         }
     }

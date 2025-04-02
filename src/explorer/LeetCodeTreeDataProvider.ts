@@ -118,13 +118,13 @@ export class LeetCodeTreeDataProvider implements vscode.TreeDataProvider<LeetCod
         }
     }
 
-    private parsePremiumUnLockIconPath(element: LeetCodeNode): string {
-        const { isPremium } = globalState.getUserStatus() ?? {};
-        if (isPremium && element.locked) {
-            return "  🔓";
-        }
-        return "";
-    }
+    // private parsePremiumUnLockIconPath(element: LeetCodeNode): string {
+    //     const { isPremium } = globalState.getUserStatus() ?? {};
+    //     if (isPremium && element.locked) {
+    //         return "  🔓";
+    //     }
+    //     return "";
+    // }
 
     private getSubCategoryTooltip(element: LeetCodeNode): string {
         // return '' unless it is a sub-category node
