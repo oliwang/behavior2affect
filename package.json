@@ -141,6 +141,18 @@
                 "title": "Sort Problems",
                 "category": "LeetCode",
                 "icon": "$(sort-precedence)"
+            },
+            {
+                "command": "behavior2affect.toggleStartStop",
+                "title": "Toggle Start/Stop Logging"
+            },
+            {
+                "command": "behavior2affect.openCurrentLogFile",
+                "title": "Open Current Log File"
+            },
+            {
+                "command": "behavior2affect.openLogsDirectory",
+                "title": "Open Logs Directory"
             }
         ],
         "viewsContainers": {

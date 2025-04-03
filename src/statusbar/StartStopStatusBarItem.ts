@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { globalState } from "../globalState";
+import { Logger } from "../logger/Logger";
+
 export class StartStopStatusBarItem implements vscode.Disposable {
     private readonly statusBarItem: vscode.StatusBarItem;
     private isRunning: boolean = false;
@@ -12,10 +14,27 @@ export class StartStopStatusBarItem implements vscode.Disposable {
     }
 
     public toggle(): void {
+        // Store previous state to determine if we're stopping
+        const wasRunning = this.isRunning;
+
+        // Toggle the state
         this.isRunning = !this.isRunning;
+
+        if (wasRunning) {
+            // Log a stop event BEFORE changing global state
+            Logger.getInstance().log('LOG_STOP', 'Logging stopped');
+        }
+
+        // Update global state after logging (if stopping)
         globalState.setLogStatus(this.isRunning);
+
+        if (this.isRunning) {
+            // Start a new log file when logging is turned on
+            Logger.getInstance().startNewLogFile();
+        }
+
         this.updateStatusBar();
-    } 
+    }
 
     private updateStatusBar(): void {
         if (this.isRunning) {

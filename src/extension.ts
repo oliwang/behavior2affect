@@ -27,6 +27,7 @@ import { markdownEngine } from "./webview/markdownEngine";
 import TrackData from "./utils/trackingUtils";
 import { globalState } from "./globalState";
 import { StartStopStatusBarItem } from "./statusbar/StartStopStatusBarItem";
+import { Logger } from "./logger/Logger";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     try {
@@ -41,6 +42,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
         leetCodeTreeDataProvider.initialize(context);
         globalState.initialize(context);
+        // Initialize the logger
+        Logger.getInstance().initialize(context);
+
         // problems "2413", "1800", "54", "885"
         // status: hide, show
         globalState.setProblemSetStatus([
@@ -52,6 +56,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         ]);
 
         const startStopStatusBar = new StartStopStatusBarItem();
+
+        // If logging was enabled in previous session, start a new log file
+        if (globalState.getLogStatus()) {
+            Logger.getInstance().startNewLogFile();
+        }
 
         context.subscriptions.push(
             leetCodeStatusBarController,
@@ -113,6 +122,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             startStopStatusBar,
             vscode.commands.registerCommand("behavior2affect.toggleStartStop", () => {
                 startStopStatusBar.toggle();
+            }),
+            vscode.commands.registerCommand("behavior2affect.openCurrentLogFile", () => {
+                Logger.getInstance().openCurrentLogFile();
+            }),
+            vscode.commands.registerCommand("behavior2affect.openLogsDirectory", () => {
+                Logger.getInstance().openLogsDirectory();
             })
         );
 
