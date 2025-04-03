@@ -45,26 +45,34 @@ export class Logger {
         }
 
         this.logFilePath = path.join(logDir, `log_${timestamp}.txt`);
-        this.log('LOG_START', 'Logging started');
+        this.log('LOG_START');
     }
 
     /**
-     * Logs a message to the file if logging is enabled
+     * Logs a data to the file if logging is enabled
      */
-    public log(eventType: string, message: string, details?: any): void {
+    public log(eventName: string, data?: Object, details?: any): void {
         if (!globalState.getLogStatus() || !this.logFilePath) {
             return;
         }
 
-        // Use Unix timestamp (milliseconds since epoch)
-        const timestamp = Date.now();
-        let logEntry = `[${timestamp}] [${eventType}] ${message}`;
+        // Create a JSON object for the log entry
+        const logObject = {
+            timestamp: Date.now(),
+            event: eventName,
+        };
 
-        if (details) {
-            logEntry += `\n${JSON.stringify(details, null, 2)}`;
+        if (data) {
+            Object.assign(logObject, data);
         }
 
-        logEntry += '\n';
+        // Add any additional details to the log object
+        if (details) {
+            Object.assign(logObject, details);
+        }
+
+        // Convert to JSON string and add newline
+        const logEntry = JSON.stringify(logObject) + '\n';
 
         fs.appendFileSync(this.logFilePath, logEntry);
     }
@@ -74,9 +82,9 @@ export class Logger {
      */
     private handleWindowStateChange(e: vscode.WindowState): void {
         if (e.focused) {
-            this.log('WINDOW_FOCUS', 'VS Code window gained focus');
+            this.log('WINDOW_FOCUS');
         } else {
-            this.log('WINDOW_BLUR', 'VS Code window lost focus');
+            this.log('WINDOW_BLUR');
         }
     }
 

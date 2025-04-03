@@ -29,19 +29,16 @@ export async function submitSolution(uri?: vscode.Uri): Promise<void> {
     }
 
     // Log the code submission event with code content
-    Logger.getInstance().log('CODE_SUBMIT', 'Submitting solution to LeetCode', {
-        filePath,
-        code: codeContent
-    });
+    Logger.getInstance().log('CODE_SUBMIT', {codeContent: codeContent});
 
     try {
         const result: string = await leetCodeExecutor.submitSolution(filePath);
         // Log the submission result
-        Logger.getInstance().log('SUBMIT_RESULT', 'Received submission result from LeetCode', { result });
+        Logger.getInstance().log('SUBMISSION_RESULT', {result: result});
         leetCodeSubmissionProvider.show(result);
     } catch (error) {
         // Log submission error
-        Logger.getInstance().log('SUBMIT_ERROR', 'Failed to submit solution', { error: error.message });
+        Logger.getInstance().log('SUBMISSION_ERROR', {error: error.message, DialogType: DialogType.error});
         await promptForOpenOutputChannel("Failed to submit the solution. Please open the output channel for details.", DialogType.error);
         return;
     }
