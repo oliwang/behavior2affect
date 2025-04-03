@@ -55,13 +55,13 @@ export class CustomCodeLensProvider implements vscode.CodeLensProvider {
             }));
         }
 
-        if (shortcuts.indexOf("test") >= 0) {
-            codeLens.push(new vscode.CodeLens(range, {
-                title: "Test",
-                command: "leetcode.testSolution",
-                arguments: [document.uri],
-            }));
-        }
+        // if (shortcuts.indexOf("test") >= 0) {
+        //     codeLens.push(new vscode.CodeLens(range, {
+        //         title: "Test",
+        //         command: "leetcode.testSolution",
+        //         arguments: [document.uri],
+        //     }));
+        // }
 
         if (shortcuts.indexOf("star") >= 0 && node) {
             codeLens.push(new vscode.CodeLens(range, {
