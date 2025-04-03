@@ -51,7 +51,7 @@ export class Logger {
     /**
      * Logs a data to the file if logging is enabled
      */
-    public log(eventName: string, data?: Object, details?: any): void {
+    public log(eventName: string, data?: Object): void {
         if (!globalState.getLogStatus() || !this.logFilePath) {
             return;
         }
@@ -64,11 +64,6 @@ export class Logger {
 
         if (data) {
             Object.assign(logObject, data);
-        }
-
-        // Add any additional details to the log object
-        if (details) {
-            Object.assign(logObject, details);
         }
 
         // Convert to JSON string and add newline
