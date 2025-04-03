@@ -14,6 +14,30 @@ export class Logger {
         this.disposables.push(
             vscode.window.onDidChangeWindowState(this.handleWindowStateChange.bind(this))
         );
+
+        this.disposables.push(
+            vscode.workspace.onDidChangeTextDocument(this.handleTextDocumentChange.bind(this))
+        );
+
+        this.disposables.push(
+            vscode.workspace.onDidOpenTextDocument(this.handleTextDocumentOpen.bind(this))
+        );
+
+        this.disposables.push(
+            vscode.workspace.onDidCloseTextDocument(this.handleTextDocumentClose.bind(this))
+        );
+
+        this.disposables.push(
+            vscode.workspace.onDidSaveTextDocument(this.handleTextDocumentSave.bind(this))
+        );
+
+        this.disposables.push(
+            vscode.workspace.onDidCreateFiles(this.handleFileCreate.bind(this))
+        );
+
+        this.disposables.push(
+            vscode.workspace.onDidDeleteFiles(this.handleFileDelete.bind(this))
+        );
     }
 
     public static getInstance(): Logger {
@@ -82,6 +106,35 @@ export class Logger {
             this.log('WINDOW_BLUR');
         }
     }
+
+    private handleTextDocumentChange(e: vscode.TextDocumentChangeEvent): void {
+        this.log('TEXT_DOCUMENT_CHANGE', e);
+    }
+
+    private handleTextDocumentOpen(e: vscode.TextDocument): void {
+        this.log('TEXT_DOCUMENT_OPEN', e);
+    }
+
+    private handleTextDocumentClose(e: vscode.TextDocument): void {
+        this.log('TEXT_DOCUMENT_CLOSE', e);
+    }
+
+    private handleTextDocumentSave(e: vscode.TextDocument): void {
+        this.log('TEXT_DOCUMENT_SAVE', e);
+    }
+
+    private handleFileCreate(e: vscode.FileCreateEvent): void {
+        this.log('FILE_CREATE', e);
+    }
+
+    private handleFileDelete(e: vscode.FileDeleteEvent): void {
+        this.log('FILE_DELETE', e);
+    }
+
+
+
+
+
 
     /**
      * Gets the directory where logs should be stored
