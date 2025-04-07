@@ -38,6 +38,16 @@ export class Logger {
         this.disposables.push(
             vscode.workspace.onDidDeleteFiles(this.handleFileDelete.bind(this))
         );
+
+        // Register terminal event handlers
+        this.disposables.push(
+            vscode.window.onDidOpenTerminal(this.handleTerminalOpen.bind(this))
+        );
+
+        this.disposables.push(
+            vscode.window.onDidCloseTerminal(this.handleTerminalClose.bind(this))
+        );
+
     }
 
     public static getInstance(): Logger {
@@ -131,10 +141,19 @@ export class Logger {
         this.log('FILE_DELETE', e);
     }
 
+    /**
+     * Handles terminal open events
+     */
+    private handleTerminalOpen(terminal: vscode.Terminal): void {
+        this.log('TERMINAL_OPEN', { name: terminal.name });
+    }
 
-
-
-
+    /**
+     * Handles terminal close events
+     */
+    private handleTerminalClose(terminal: vscode.Terminal): void {
+        this.log('TERMINAL_CLOSE', { name: terminal.name });
+    }
 
     /**
      * Gets the directory where logs should be stored
