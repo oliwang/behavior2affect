@@ -131,6 +131,21 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             })
         );
 
+        context.subscriptions.push(
+            vscode.window.onDidStartTerminalShellExecution(e => {
+                Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_START", e);
+            }),
+            vscode.window.onDidEndTerminalShellExecution(e => {
+                Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_END", Object.assign(e, vscode.window.activeTerminal));
+            }),
+            vscode.window.onDidChangeTerminalShellIntegration(e => {
+                Logger.getInstance().log("TERMINAL_SHELL_INTEGRATION_CHANGE", e);
+            }),
+            vscode.window.onDidChangeTerminalState(e => {
+                Logger.getInstance().log("TERMINAL_STATE_CHANGE", e);
+            })
+        );
+
         await leetCodeExecutor.switchEndpoint(plugin.getLeetCodeEndpoint());
         await leetCodeManager.getLoginStatus();
         vscode.window.registerUriHandler({ handleUri: leetCodeManager.handleUriSignIn });
