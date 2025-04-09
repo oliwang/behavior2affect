@@ -8,6 +8,7 @@ export class Logger {
     private logFilePath: string | undefined;
     private disposables: vscode.Disposable[] = [];
     private static instance: Logger;
+    private static terminalPrefix = "";
 
     private constructor() {
         // Register window focus change events
@@ -39,14 +40,6 @@ export class Logger {
             vscode.workspace.onDidDeleteFiles(this.handleFileDelete.bind(this))
         );
 
-        // Register terminal event handlers
-        this.disposables.push(
-            vscode.window.onDidOpenTerminal(this.handleTerminalOpen.bind(this))
-        );
-
-        this.disposables.push(
-            vscode.window.onDidCloseTerminal(this.handleTerminalClose.bind(this))
-        );
 
     }
 
@@ -55,6 +48,14 @@ export class Logger {
             Logger.instance = new Logger();
         }
         return Logger.instance;
+    }
+
+    public static setTerminalPrefix(prefix: string): void {
+        Logger.terminalPrefix = prefix;
+    }
+
+    public static getTerminalPrefix(): string {
+        return Logger.terminalPrefix;
     }
 
     public initialize(context: vscode.ExtensionContext): void {
@@ -141,19 +142,6 @@ export class Logger {
         this.log('FILE_DELETE', e);
     }
 
-    /**
-     * Handles terminal open events
-     */
-    private handleTerminalOpen(terminal: vscode.Terminal): void {
-        this.log('TERMINAL_OPEN', { name: terminal.name });
-    }
-
-    /**
-     * Handles terminal close events
-     */
-    private handleTerminalClose(terminal: vscode.Terminal): void {
-        this.log('TERMINAL_CLOSE', { name: terminal.name });
-    }
 
     /**
      * Gets the directory where logs should be stored

