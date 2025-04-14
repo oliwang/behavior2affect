@@ -111,6 +111,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             {problemId: "54", status: "hide"},
             {problemId: "885", status: "hide"}
         ]);
+        globalState.setCurrentFileNumber("2235");
 
         const startStopStatusBar = new StartStopStatusBarItem();
 

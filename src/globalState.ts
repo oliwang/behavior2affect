@@ -5,8 +5,9 @@ import * as vscode from "vscode";
 
 const CookieKey = "leetcode-cookie";
 const UserStatusKey = "leetcode-user-status";
-const ProblemSetStatusKey = "leetcode-problem-set-status";
-const LogStatusKey = "leetcode-log-status";
+const ProblemSetStatusKey = "behavior2affect-problem-set-status";
+const LogStatusKey = "behavior2affect-log-status";
+const CurrentFileNumberKey = "behavior2affect-current-file-number";
 
 export type UserDataType = {
     isSignedIn: boolean;
@@ -28,6 +29,8 @@ class GlobalState {
     private _userStatus: UserDataType;
     private _problemSetStatus: ProblemStatusDataType[];
     private _logStatus: boolean;
+    private _currentFileNumber: string;
+
     public initialize(context: vscode.ExtensionContext): void {
         this.context = context;
         this._state = this.context.globalState;
@@ -76,6 +79,15 @@ class GlobalState {
 
     public getLogStatus(): boolean | undefined {
         return this._logStatus ?? this._state.get(LogStatusKey);
+    }
+
+    public setCurrentFileNumber(currentFileNumber: string): any {
+        this._currentFileNumber = currentFileNumber;
+        return this._state.update(CurrentFileNumberKey, this._currentFileNumber);
+    }
+
+    public getCurrentFileNumber(): string | undefined {
+        return this._currentFileNumber;
     }
 }
 

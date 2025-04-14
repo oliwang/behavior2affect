@@ -9,6 +9,7 @@ import { DialogType, promptForOpenOutputChannel, promptForSignIn } from "../util
 import { getActiveFilePath } from "../utils/workspaceUtils";
 import { leetCodeSubmissionProvider } from "../webview/leetCodeSubmissionProvider";
 import { Logger } from "../logger/Logger";
+import { globalState } from "../globalState";
 
 export async function submitSolution(uri?: vscode.Uri): Promise<void> {
     if (!leetCodeManager.getUser()) {
@@ -23,9 +24,15 @@ export async function submitSolution(uri?: vscode.Uri): Promise<void> {
 
     // Get code content from the active editor
     let codeContent = "";
+    let currentFileNumber = globalState.getCurrentFileNumber();
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor && activeEditor.document.uri.fsPath === filePath) {
         codeContent = activeEditor.document.getText();
+        console.log("url", activeEditor.document.uri.fsPath);
+        currentFileNumber = activeEditor.document.uri.fsPath.split("/").pop()?.split(".")[0];
+        if (currentFileNumber) {
+            globalState.setCurrentFileNumber(currentFileNumber);
+        }
     }
 
     // Log the code submission event with code content

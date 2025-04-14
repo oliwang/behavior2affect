@@ -31,17 +31,15 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview {
         if (this.result.messages[0].toLowerCase().includes("accepted")) {
             let problemSetStatus = globalState.getProblemSetStatus();
             if (problemSetStatus) {
-                for (let i = 0; i < problemSetStatus.length; i++) {
-                    if (problemSetStatus[i].status === "hide") {
-                        problemSetStatus[i].status = "show";
-                        break;
-                    }
+                let currentFileNumber = globalState.getCurrentFileNumber();
+                let problemIndex = problemSetStatus.findIndex(problem => problem.problemId === currentFileNumber);
+                let nextProblemIndex = problemIndex + 1;
+                if (currentFileNumber && nextProblemIndex < problemSetStatus.length) {
+                    problemSetStatus[nextProblemIndex].status = "show";
+                    globalState.setProblemSetStatus(problemSetStatus);
                 }
-                globalState.setProblemSetStatus(problemSetStatus);
             }
         }
-
-
 
         const messages: string[] = this.result.messages.slice(1).map((m: string) => `* ${m}`);
         const sections: string[] = Object.keys(this.result)
