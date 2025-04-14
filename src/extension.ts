@@ -220,6 +220,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }),
             vscode.window.onDidCloseTerminal(e => {
                 Logger.getInstance().log("TERMINAL_CLOSE", e);
+            }),
+            vscode.window.onDidChangeActiveTerminal(e => {
+                Logger.getInstance().log("TERMINAL_ACTIVE_CHANGE", e);
             })
         );
 
@@ -227,19 +230,120 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         context.subscriptions.push(
             vscode.window.onDidChangeWindowState(e => {
                 if (e.focused) {
-                    Logger.getInstance().log('WINDOW_FOCUS');
+                    Logger.getInstance().log('WINDOW_FOCUS', e);
                 } else {
-                    Logger.getInstance().log('WINDOW_BLUR');
+                    Logger.getInstance().log('WINDOW_BLUR', e);
                 }
             })
         );
 
-        // related to editor
+        // related to text editor
 
         context.subscriptions.push(
+            vscode.window.onDidChangeActiveTextEditor(e => {
+                Logger.getInstance().log("TEXT_EDITOR_ACTIVE_CHANGE", e);
+            }),
+            vscode.window.onDidChangeTextEditorOptions(e => {
+                Logger.getInstance().log("TEXT_EDITOR_OPTIONS_CHANGE", e);
+            }),
             vscode.window.onDidChangeTextEditorSelection(e => {
                 Logger.getInstance().log("TEXT_EDITOR_SELECTION_CHANGE", e);
+            }),
+            vscode.window.onDidChangeTextEditorViewColumn(e => {
+                Logger.getInstance().log("TEXT_EDITOR_VIEW_COLUMN_CHANGE", e);
+            }),
+            vscode.window.onDidChangeTextEditorVisibleRanges(e => {
+                Logger.getInstance().log("TEXT_EDITOR_VISIBLE_RANGES_CHANGE", e);
+            }),
+            vscode.window.onDidChangeVisibleTextEditors(e => {
+                Logger.getInstance().log("TEXT_EDITOR_VISIBLE_CHANGE", e);
             })
+        );
+
+        // related to debug
+
+        context.subscriptions.push(
+            vscode.debug.onDidStartDebugSession(e => {
+                Logger.getInstance().log("DEBUG_SESSION_START", e);
+            }),
+            vscode.debug.onDidTerminateDebugSession(e => {
+                Logger.getInstance().log("DEBUG_SESSION_TERMINATE", e);
+            }),
+            vscode.debug.onDidChangeActiveDebugSession(e => {
+                Logger.getInstance().log("DEBUG_SESSION_CHANGE", e);
+            }),
+            vscode.debug.onDidChangeActiveStackItem(e => {
+                Logger.getInstance().log("DEBUG_STACK_ITEM_CHANGE", e);
+            }),
+            vscode.debug.onDidChangeBreakpoints(e => {
+                Logger.getInstance().log("DEBUG_BREAKPOINTS_CHANGE", e);
+            }),
+            vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
+                Logger.getInstance().log("DEBUG_SESSION_CUSTOM_EVENT", e);
+            })
+        );
+
+        // related to tasks
+
+        context.subscriptions.push(
+            vscode.tasks.onDidEndTask(e => {
+                Logger.getInstance().log("TASK_END", e);
+            }),
+            vscode.tasks.onDidEndTaskProcess(e => {
+                Logger.getInstance().log("TASK_PROCESS_END", e);
+            }),
+            vscode.tasks.onDidStartTask(e => {
+                Logger.getInstance().log("TASK_START", e);
+            }),
+            vscode.tasks.onDidStartTaskProcess(e => {
+                Logger.getInstance().log("TASK_PROCESS_START", e);
+            })
+        );
+
+        // related to workspace
+        context.subscriptions.push(
+            vscode.workspace.onDidChangeConfiguration(e => {
+                Logger.getInstance().log("WORKSPACE_CONFIGURATION_CHANGE", e);
+            }),
+            vscode.workspace.onDidChangeTextDocument(e => {
+                Logger.getInstance().log("WORKSPACE_TEXT_DOCUMENT_CHANGE", e);
+            }),
+            vscode.workspace.onDidChangeWorkspaceFolders(e => {
+                Logger.getInstance().log("WORKSPACE_FOLDERS_CHANGE", e);
+            }),
+            vscode.workspace.onDidCloseTextDocument(e => {
+                Logger.getInstance().log("WORKSPACE_TEXT_DOCUMENT_CLOSE", e);
+            }),
+            vscode.workspace.onDidOpenTextDocument(e => {
+                Logger.getInstance().log("WORKSPACE_TEXT_DOCUMENT_OPEN", e);
+            }),
+            vscode.workspace.onDidCreateFiles(e => {
+                Logger.getInstance().log("WORKSPACE_CREATE_FILES", e);
+            }),
+            vscode.workspace.onDidDeleteFiles(e => {
+                Logger.getInstance().log("WORKSPACE_DELETE_FILES", e);
+            }),
+            vscode.workspace.onDidRenameFiles(e => {
+                Logger.getInstance().log("WORKSPACE_RENAME_FILES", e);
+            }),
+            vscode.workspace.onDidSaveTextDocument(e => {
+                Logger.getInstance().log("WORKSPACE_SAVE_TEXT_DOCUMENT", e);
+            }),
+            vscode.workspace.onWillCreateFiles(e => {
+                Logger.getInstance().log("WORKSPACE_WILL_CREATE_FILES", e);
+            }),
+            vscode.workspace.onWillDeleteFiles(e => {
+                Logger.getInstance().log("WORKSPACE_WILL_DELETE_FILES", e);
+            }),
+            vscode.workspace.onWillRenameFiles(e => {
+                Logger.getInstance().log("WORKSPACE_WILL_RENAME_FILES", e);
+            }),
+            vscode.workspace.onWillSaveTextDocument(e => {
+                Logger.getInstance().log("WORKSPACE_WILL_SAVE_TEXT_DOCUMENT", e);
+            })
+
+
+
         );
 
         await leetCodeExecutor.switchEndpoint(plugin.getLeetCodeEndpoint());
