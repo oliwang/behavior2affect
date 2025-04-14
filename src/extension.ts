@@ -193,6 +193,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             })
         );
 
+        // related to terminal
+
         let pseudoterminal = new HiddenTerminal();
         pseudoterminal.open();
 
@@ -218,6 +220,25 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }),
             vscode.window.onDidCloseTerminal(e => {
                 Logger.getInstance().log("TERMINAL_CLOSE", e);
+            })
+        );
+
+        // related to window
+        context.subscriptions.push(
+            vscode.window.onDidChangeWindowState(e => {
+                if (e.focused) {
+                    Logger.getInstance().log('WINDOW_FOCUS');
+                } else {
+                    Logger.getInstance().log('WINDOW_BLUR');
+                }
+            })
+        );
+
+        // related to editor
+
+        context.subscriptions.push(
+            vscode.window.onDidChangeTextEditorSelection(e => {
+                Logger.getInstance().log("TEXT_EDITOR_SELECTION_CHANGE", e);
             })
         );
 

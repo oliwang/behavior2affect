@@ -17,10 +17,6 @@ export class Logger {
     private static terminalPrefix = "";
 
     private constructor() {
-        // Register window focus change events
-        this.disposables.push(
-            vscode.window.onDidChangeWindowState(this.handleWindowStateChange.bind(this))
-        );
 
         this.disposables.push(
             vscode.workspace.onDidChangeTextDocument(this.handleTextDocumentChange.bind(this))
@@ -121,16 +117,6 @@ export class Logger {
         fs.appendFileSync(this.logFilePath, logEntry);
     }
 
-    /**
-     * Handles window state changes (focus/blur)
-     */
-    private handleWindowStateChange(e: vscode.WindowState): void {
-        if (e.focused) {
-            this.log('WINDOW_FOCUS');
-        } else {
-            this.log('WINDOW_BLUR');
-        }
-    }
 
     private handleTextDocumentChange(e: vscode.TextDocumentChangeEvent): void {
         this.log('TEXT_DOCUMENT_CHANGE', e);
