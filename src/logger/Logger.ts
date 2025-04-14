@@ -3,9 +3,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { globalState } from '../globalState';
+import * as cp from "child_process";
 
 export class Logger {
     private logFilePath: string | undefined;
+    private logMouseFilePath: string | undefined;
+    private logKeyboardFilePath: string | undefined;
+    private logMouseProcess: cp.ChildProcess | undefined;
+    private logKeyboardProcess: cp.ChildProcess | undefined;
+
     private disposables: vscode.Disposable[] = [];
     private static instance: Logger;
     private static terminalPrefix = "";
@@ -79,8 +85,16 @@ export class Logger {
             fs.mkdirSync(logDir, { recursive: true });
         }
 
-        this.logFilePath = path.join(logDir, `log_${timestamp}.txt`);
+        this.logFilePath = path.join(logDir, `${timestamp}_log.txt`);
+        this.logMouseFilePath = path.join(logDir, `${timestamp}_mouse_log.txt`);
+        this.logKeyboardFilePath = path.join(logDir, `${timestamp}_keyboard_log.txt`);
         this.log('LOG_START');
+        // console.log(__dirname);
+
+        this.logKeyboardProcess = cp.exec(`/Users/olivia/Documents/Programming/03-TryNewStuff/mk_dynamics/.venv/bin/python ${path.join(__dirname, 'keyboard_dynamics.py')} ${this.logKeyboardFilePath}`);
+        this.log('LOG_KEYBOARD_PROCESS_STARTED');
+        this.logMouseProcess = cp.exec(`/Users/olivia/Documents/Programming/03-TryNewStuff/mk_dynamics/.venv/bin/python ${path.join(__dirname, 'mouse_dynamics.py')} ${this.logMouseFilePath}`);
+        this.log('LOG_MOUSE_PROCESS_STARTED');
     }
 
     /**
@@ -157,6 +171,11 @@ export class Logger {
         return logDir;
     }
 
+
+    public stopLogging(): void {
+        this.logKeyboardProcess?.kill();
+        this.logMouseProcess?.kill();
+    }
 
     public dispose(): void {
         this.disposables.forEach(d => d.dispose());

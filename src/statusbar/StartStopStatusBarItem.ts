@@ -23,6 +23,7 @@ export class StartStopStatusBarItem implements vscode.Disposable {
         if (wasRunning) {
             // Log a stop event BEFORE changing global state
             Logger.getInstance().log('LOG_STOP');
+            Logger.getInstance().stopLogging();
         }
 
         // Update global state after logging (if stopping)

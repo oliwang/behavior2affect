@@ -1,8 +1,11 @@
 from pynput import keyboard
 from logger import Logger
 import datetime
+import sys
 
-logger = Logger(f"log_keyboard_{round(datetime.datetime.now().timestamp() * 1000)}.txt")
+file_path = sys.argv[1]
+
+logger = Logger(file_path)
 
 def on_press(key):
     logger.save_logs("KEY_PRESS", {"key": str(key)})
