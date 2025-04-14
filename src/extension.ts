@@ -180,11 +180,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             vscode.commands.registerCommand("behavior2affect.toggleStartStop", () => {
                 startStopStatusBar.toggle();
             }),
-            vscode.commands.registerCommand("behavior2affect.openCurrentLogFile", () => {
-                Logger.getInstance().openCurrentLogFile();
-            }),
-            vscode.commands.registerCommand("behavior2affect.openLogsDirectory", () => {
-                Logger.getInstance().openLogsDirectory();
+            vscode.commands.registerCommand("behavior2affect.getCurrentFilePath", () => {
+                // get the active text editor file path
+                const editor = vscode.window.activeTextEditor;
+                if (editor) {
+                    const filePath = editor.document.uri.fsPath;
+                    // Logger.getInstance().log("CURRENT_FILE_PATH", filePath);
+                    // copy the file path to the clipboard
+                    vscode.env.clipboard.writeText(filePath);
+                }
             })
         );
 
@@ -195,7 +199,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             vscode.window.onDidStartTerminalShellExecution(e => {
                 Logger.getInstance().log("TERMINAL_SHELL_EXECUTION_START", e);
                 pseudoterminal.execute(e.execution.commandLine.value);
-
 
             }),
             vscode.window.onDidEndTerminalShellExecution(e => {

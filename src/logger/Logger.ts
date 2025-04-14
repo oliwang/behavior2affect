@@ -157,38 +157,6 @@ export class Logger {
         return logDir;
     }
 
-    /**
-     * Opens the current log file in the editor
-     */
-    public async openCurrentLogFile(): Promise<void> {
-        if (!this.logFilePath) {
-            vscode.window.showInformationMessage('No active log file. Start logging first.');
-            return;
-        }
-
-        try {
-            const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(this.logFilePath));
-            await vscode.window.showTextDocument(doc);
-        } catch (error) {
-            vscode.window.showErrorMessage(`Failed to open log file: ${error}`);
-        }
-    }
-
-    /**
-     * Opens the logs directory in file explorer
-     */
-    public async openLogsDirectory(): Promise<void> {
-        const logDir = this.getLogDirectory();
-
-        // Ensure the directory exists
-        if (!fs.existsSync(logDir)) {
-            fs.mkdirSync(logDir, { recursive: true });
-        }
-
-        // Open the directory using the operating system's file explorer
-        const uri = vscode.Uri.file(logDir);
-        vscode.env.openExternal(uri);
-    }
 
     public dispose(): void {
         this.disposables.forEach(d => d.dispose());
