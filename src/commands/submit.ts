@@ -28,7 +28,6 @@ export async function submitSolution(uri?: vscode.Uri): Promise<void> {
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor && activeEditor.document.uri.fsPath === filePath) {
         codeContent = activeEditor.document.getText();
-        console.log("url", activeEditor.document.uri.fsPath);
         currentFileNumber = activeEditor.document.uri.fsPath.split("/").pop()?.split(".")[0];
         if (currentFileNumber) {
             globalState.setCurrentFileNumber(currentFileNumber);
