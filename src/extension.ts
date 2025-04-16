@@ -247,7 +247,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 Logger.getInstance().log("TEXT_EDITOR_OPTIONS_CHANGE", e);
             }),
             vscode.window.onDidChangeTextEditorSelection(e => {
-                Logger.getInstance().log("TEXT_EDITOR_SELECTION_CHANGE", e);
+                let activeEditor = vscode.window.activeTextEditor;
+                let codeContent = "";
+                if (activeEditor) {
+                    codeContent = activeEditor.document.getText();
+                }
+                Logger.getInstance().log("TEXT_EDITOR_SELECTION_CHANGE", Object.assign(e, {codeContent: codeContent}));
+
             }),
             vscode.window.onDidChangeTextEditorViewColumn(e => {
                 Logger.getInstance().log("TEXT_EDITOR_VIEW_COLUMN_CHANGE", e);
