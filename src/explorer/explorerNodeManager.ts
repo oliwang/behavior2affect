@@ -167,11 +167,14 @@ class ExplorerNodeManager implements Disposable {
                 res.push(node);
             }
         }
-        // reverse the order of the nodes
-        res.reverse();
+        // sort the nodes by setid, you can get the setid from the problemSetStatus
+        res.sort((a, b) => {
+            const aSetId = problemSetStatus?.find((status) => status.problemId === a.id)?.setid ?? 0;
+            const bSetId = problemSetStatus?.find((status) => status.problemId === b.id)?.setid ?? 0;
+            return aSetId - bSetId;
+        });
         return res;
     }
-
 
     public dispose(): void {
         this.explorerNodeMap.clear();

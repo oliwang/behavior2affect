@@ -105,11 +105,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         // problems "2413", "1800", "54", "885"
         // status: hide, show
         globalState.setProblemSetStatus([
-            {problemId: "2235", status: "show"},
-            {problemId: "2413", status: "hide"},
-            {problemId: "1800", status: "hide"},
-            {problemId: "54", status: "hide"},
-            {problemId: "885", status: "hide"}
+            {problemId: "2235", status: "show", setid: 1},
+            {problemId: "2413", status: "hide", setid: 2},
+            {problemId: "1800", status: "hide", setid: 3},
+            {problemId: "54", status: "hide", setid: 4},
+            {problemId: "885", status: "hide", setid: 5}
         ]);
         globalState.setCurrentFileNumber("2235");
 

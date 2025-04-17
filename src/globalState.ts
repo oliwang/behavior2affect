@@ -20,6 +20,7 @@ export type UserDataType = {
 export type ProblemStatusDataType = {
     problemId: string;
     status: string;
+    setid: number;
 };
 
 class GlobalState {
